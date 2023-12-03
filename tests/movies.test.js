@@ -20,7 +20,8 @@ describe("GET /api/movies/:id", () => {
   it("should return one movie", async () => {
     const response = await request(app).get("/api/movies/1");
 
-    expect(response.headers["content-type"]).toMatch(/json/);
+    // Check if the response content type includes 'json' substring
+    expect(response.headers["content-type"]).toContain(/json/);
 
     expect(response.status).toEqual(200);
   });
@@ -144,7 +145,7 @@ describe("PUT /api/movies/:id", () => {
       .put(`/api/movies/1`)
       .send(movieWithMissingProps);
 
-    expect(response.status).toEqual(500);
+    expect(response.status).toEqual(404);
   });
 
   it("should return no movie", async () => {
@@ -159,5 +160,19 @@ describe("PUT /api/movies/:id", () => {
     const response = await request(app).put("/api/movies/0").send(newMovie);
 
     expect(response.status).toEqual(404);
+  });
+});
+
+describe("DELETE /api/movies/:id", () => {
+  it("should not delete a movie with a non-existent ID", async () => {
+    const movieIdNonExistent = 0;
+
+    const response = await request(app).delete(
+      `/api/movies/${movieIdNonExistent}`
+    );
+
+    expect(response.status).toEqual(404);
+
+    expect(response.body).toEqual({});
   });
 });

@@ -165,3 +165,17 @@ describe("PUT /api/users/:id", () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe("DELETE /api/users/:id", () => {
+  it("should not delete a user with a non-existent ID", async () => {
+    const userIdNonExistent = 0;
+
+    const response = await request(app).delete(
+      `/api/users/${userIdNonExistent}`
+    );
+
+    expect(response.status).toEqual(404);
+
+    expect(response.body).toEqual({});
+  });
+});
